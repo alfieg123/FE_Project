@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import './ArticleCard.css'
 
 const ArticleCard = ({ article }) => {
@@ -11,7 +12,7 @@ const ArticleCard = ({ article }) => {
       <p></p>
       <p>Votes: {article.votes}</p>
       <p>Comments: {article.comment_count}</p>
-      <button>Select Article</button>
+      <Link to= {`/articles/${article.article_id}`}>Read Full Article</Link>
     </div>
   );
 };
