@@ -19,3 +19,10 @@ export const fetchComments = (id) => {
     return response.data.comments;
   });
 };
+
+export const voteOnArticle = (id, voteAdjustment) => {
+  return api.patch(`/api/articles/${id}`, {voteAdjustment})
+    .then(response => {
+        return response.data.article
+    });
+}

@@ -6,6 +6,7 @@ const ArticleCard = ({ article }) => {
   return (
     <div className="article-card">
       <h2>{article.title}</h2>
+      <img src={article.article_img_url} style={{ maxWidth: '100%', height: 'auto' }} />
       <p>By {article.author}</p>
       <p>Topic: {article.topic}</p>
       <p>{new Date(article.created_at).toLocaleDateString()}</p>
