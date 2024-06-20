@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { fetchArticle, fetchComments, voteOnArticle, postComment } from '../api/api';
+import { fetchArticle, fetchComments, voteOnArticle, postComment, deleteComment } from '../api/api';
 
 const Article = () => {
   const { id } = useParams();
@@ -11,6 +11,7 @@ const Article = () => {
   const [comment, setComment] = useState('');
   const [username, setUsername] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const currentUser = 'cooljmessy';
 
   useEffect(() => {
     Promise.all([
@@ -55,6 +56,13 @@ const Article = () => {
     });
   }
 
+  const handleCommentDelete = (comment_id) => {
+    deleteComment(comment_id)
+    .then(() => {
+      setComments((comments) => comments.filter((comment) => comment.comment_id !== comment_id));
+    });
+  };
+
   if (isLoading) return <p>Loading...</p>;
 
   return (
@@ -74,6 +82,7 @@ const Article = () => {
           <li key={comment.comment_id}>
             <p>{comment.body}</p>
             <p>Author: {comment.author} | Votes: {comment.votes} | Posted at: {new Date(comment.created_at).toLocaleString()}</p>
+            {comment.author === currentUser && (<button onClick={() => handleCommentDelete(comment.comment_id)}>Delete</button>)}
           </li>
         ))}
       </ul>
