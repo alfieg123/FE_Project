@@ -21,8 +21,14 @@ export const fetchComments = (id) => {
 };
 
 export const voteOnArticle = (id, voteAdjustment) => {
-  return api.patch(`/api/articles/${id}`, {voteAdjustment})
+  return api.patch(`/api/articles/${id}`, {inc_votes : voteAdjustment})
     .then(response => {
         return response.data.article
     });
 }
+
+export const postComment = (id, { username, body }) => {
+  return api.post(`/api/articles/${id}/comments`, { username, body })
+  .then((response) => {
+        return response.data.comment});
+};

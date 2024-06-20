@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { fetchArticle, fetchComments, voteOnArticle } from '../api/api';
+import { fetchArticle, fetchComments, voteOnArticle, postComment } from '../api/api';
 
 const Article = () => {
   const { id } = useParams();
   const [article, setArticle] = useState(null);
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [comment, setComment] = useState('');
+  const [username, setUsername] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -26,12 +29,31 @@ const Article = () => {
       ...article,
       votes: article.votes + voteAdjustment,
     }));
-
     voteOnArticle(id, voteAdjustment)
-      .then((updatedArticle) => {
-        setArticle(updatedArticle);
-      })
+  }
+  
+  const handleCommentSubmit = (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+
+    if(comment === '' || username === '') {
+      console.error("Username and Comment must not be empty!")
     }
+
+    postComment(id, { username : username, body: comment })
+    .then((newComment) => {
+      setComments((comments) => [newComment, ...comments]);
+      setComment('');
+      setUsername('');
+      setIsSubmitting(false);
+    })
+    .catch((error) => {
+      if (error.response.status === 404) {
+      console.error('Please enter a valid username!', error);
+      setIsSubmitting(false); 
+      }
+    });
+  }
 
   if (isLoading) return <p>Loading...</p>;
 
@@ -56,6 +78,20 @@ const Article = () => {
         ))}
       </ul>
 
+      <h3>Add New Comment:</h3>
+      <form onSubmit={handleCommentSubmit}>
+          <label>
+            Username:
+            <input type="text" value={username} onChange={(event) => setUsername(event.target.value)}/>
+          </label>
+          <label>
+            Comment:
+            <input type="text" value={comment} onChange={(event) => setComment(event.target.value)}/>
+          </label>
+          <button type="submit">
+            Submit
+          </button>
+        </form>
     </div>
   );
 };
