@@ -36,3 +36,14 @@ export const postComment = (id, { username, body }) => {
 export const deleteComment = (comment_id) => {
   return api.delete(`/api/comments/${comment_id}`);
 };
+
+export const fetchTopics = () => {
+  return api.get('/api/topics')
+    .then(response => response.data.topics);
+};
+
+export const fetchArticlesByTopic = (slug) => {
+  return api.get(`/api/articles?topic=${slug}`).then((response) => {
+    return response.data.articles;
+  });
+};

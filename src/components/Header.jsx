@@ -16,9 +16,6 @@ const Header = () => {
                 <li>
                         <Link to='/topics'>Topics</Link>
                 </li>
-                <li>
-                        Profile
-                </li>
             </ul>
         </nav>
         </>
